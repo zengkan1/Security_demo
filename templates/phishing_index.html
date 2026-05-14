@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}钓鱼攻击演示{% endblock %}
+{% block content %}
+
+<h2 class="mb-4"><i class="bi bi-bug-fill text-danger"></i> 钓鱼攻击（Phishing）演示</h2>
+
+<p class="lead text-muted">
+    钓鱼攻击是最常见的网络攻击方式之一。攻击者创建一个与真实网站外观完全相同的假冒网站，
+    诱导用户输入用户名和密码。以下演示将让你亲身体验整个攻击过程，并学习如何防范。
+</p>
+
+<div class="row g-4 mt-2">
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-danger">
+            <div class="card-body text-center">
+                <i class="bi bi-fingerprint display-3 text-danger"></i>
+                <h4 class="mt-3">模拟钓鱼攻击</h4>
+                <p class="text-muted">
+                    体验被钓鱼的全过程。你将看到一个与真实登录页面
+                    <strong>几乎完全相同</strong>的页面。
+                    输入测试凭证，看看会发生什么。
+                </p>
+                <div class="alert alert-danger small mb-2">
+                    <i class="bi bi-info-circle"></i>
+                    此页面仅用于教育演示。输入的数据不会被用于任何非法目的。
+                </div>
+            </div>
+            <div class="card-footer bg-transparent text-center">
+                <a href="/phishing/attack" class="btn btn-danger">开始体验</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-warning">
+            <div class="card-body text-center">
+                <i class="bi bi-eye-fill display-3 text-warning"></i>
+                <h4 class="mt-3">攻击者视角</h4>
+                <p class="text-muted">
+                    查看攻击者实时收集到的用户名和密码。
+                    所有密码以<strong class="text-danger">明文</strong>存储——
+                    这就是攻击者真正看到的。
+                </p>
+                <div class="alert alert-warning small mb-2">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    真实攻击中，受害者完全不知情，攻击者会实时收到通知。
+                </div>
+            </div>
+            <div class="card-footer bg-transparent text-center">
+                <a href="/phishing/captures" class="btn btn-warning">查看日志</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-success">
+            <div class="card-body text-center">
+                <i class="bi bi-shield-fill-check display-3 text-success"></i>
+                <h4 class="mt-3">防范钓鱼指南</h4>
+                <p class="text-muted">
+                    学习如何识别钓鱼网站的关键技巧：
+                    检查 URL、验证证书、悬停链接等。
+                    保护自己和身边的人不受钓鱼攻击。
+                </p>
+            </div>
+            <div class="card-footer bg-transparent text-center">
+                <a href="/phishing/education" class="btn btn-success">学习防护</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

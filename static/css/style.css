@@ -1,0 +1,66 @@
+.packet-capture {
+    background-color: #1e1e1e;
+    color: #00cc66;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.82rem;
+    padding: 1.2rem;
+    border-radius: 6px;
+    overflow-x: auto;
+    white-space: pre;
+    line-height: 1.7;
+}
+
+.packet-capture .highlight-danger {
+    color: #ff4444;
+    font-weight: bold;
+}
+
+.packet-capture .comment {
+    color: #6a9955;
+    font-style: italic;
+}
+
+.packet-capture .field {
+    color: #569cd6;
+}
+
+.packet-capture .hex {
+    color: #ce9178;
+}
+
+.packet-capture .arrow {
+    color: #dcdcaa;
+}
+
+.packet-compare-http {
+    border: 2px solid #dc3545;
+    border-top: 4px solid #dc3545;
+}
+
+.packet-compare-https {
+    border: 2px solid #198754;
+    border-top: 4px solid #198754;
+}
+
+.tls-step-card {
+    transition: transform 0.2s;
+}
+
+.tls-step-card:hover {
+    transform: translateY(-3px);
+}
+
+.captured-password {
+    color: #dc3545;
+    font-weight: bold;
+    font-family: 'Consolas', 'Courier New', monospace;
+}
+
+.phishing-reveal {
+    animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

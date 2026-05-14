@@ -1,0 +1,342 @@
+{% extends "base.html" %}
+{% block title %}TLS/HTTPS 演示{% endblock %}
+{% block content %}
+
+<h2 class="mb-4"><i class="bi bi-lock-fill text-success"></i> TLS/HTTPS 如何保护你的数据</h2>
+
+<!-- Section 1: 什么是 TLS/HTTPS -->
+<section class="mb-5">
+    <h4>一、什么是 TLS/HTTPS？</h4>
+    <div class="card bg-light">
+        <div class="card-body">
+            <p><strong>TLS</strong>（Transport Layer Security，传输层安全协议）在浏览器和服务器之间建立加密通道。<strong>HTTPS</strong> = HTTP over TLS，即在 TLS 保护下的 HTTP 通信。</p>
+            <p>简单比喻：</p>
+            <div class="row text-center mt-3">
+                <div class="col-md-6">
+                    <div class="card border-danger">
+                        <div class="card-body">
+                            <i class="bi bi-envelope display-4 text-danger"></i>
+                            <h5>HTTP = 明信片</h5>
+                            <p class="text-muted mb-0">任何人都可以在传输途中阅读内容</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-success">
+                        <div class="card-body">
+                            <i class="bi bi-envelope-check display-4 text-success"></i>
+                            <h5>HTTPS = 密封信</h5>
+                            <p class="text-muted mb-0">只有收件人才能打开阅读</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="mt-4 mb-0"><strong>TLS 提供三大安全保证：</strong></p>
+            <ul class="mb-0">
+                <li><strong>加密性（Encryption）</strong>：通信内容被加密，第三方无法解读。</li>
+                <li><strong>完整性（Integrity）</strong>：数据在传输过程中无法被篡改。</li>
+                <li><strong>身份验证（Authentication）</strong>：确认你正在与真正的服务器通信，而非假冒者。</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Section 2: HTTP vs HTTPS 并排对比 -->
+<section class="mb-5">
+    <h4>二、HTTP vs HTTPS：中间人视角对比</h4>
+    <p class="text-muted">假设你正在登录网站，用户名 <code>student</code>，密码 <code>MySecret123</code>。攻击者在网络中监听流量时会看到什么？</p>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card packet-compare-http h-100">
+                <div class="card-header bg-danger text-white">
+                    <i class="bi bi-unlock"></i> HTTP（明文传输）— 不安全
+                </div>
+                <div class="card-body bg-dark">
+                    <div class="packet-capture">
+<span class="field">POST</span> /login <span class="field">HTTP/1.1</span>
+<span class="field">Host:</span> security-demo-lab.xyz
+<span class="field">Content-Type:</span> application/x-www-form-urlencoded
+<span class="field">Content-Length:</span> 38
+
+<span class="highlight-danger">username=student&amp;password=MySecret123</span>
+
+<span class="comment">&lt;!-- 攻击者可以直接看到
+     你的用户名和密码！--&gt;</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card packet-compare-https h-100">
+                <div class="card-header bg-success text-white">
+                    <i class="bi bi-lock"></i> HTTPS（加密传输）— 安全
+                </div>
+                <div class="card-body bg-dark">
+                    <div class="packet-capture">
+<span class="field">TLS 1.3</span> Record Layer: Application Data
+<span class="field">Content Type:</span> Application Data (23)
+<span class="field">Length:</span> 69
+
+<span class="hex">b8 7f 3a 12 9c d4 e1 55 6e 8f 2b 09
+d3 a7 41 22 8c ee 19 f0 57 2b 3d 6c
+c4 18 9a 5e f1 0b d6 82 4a 3c 70 e5
+a1 b9 6d 2f 88 5c 31 77 e9 f4 0a 53
+ff 0d 82 bc 7e 19 3a c1 6d 48 f5 e7
+2b 14 0d 9f 6a 31 c8 57 2e</span>
+
+<span class="comment">&lt;!-- 攻击者看到的
+     是无法解读的乱码 --&gt;</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 3: 模拟数据包捕获 -->
+<section class="mb-5">
+    <h4>三、模拟数据包捕获（Wireshark 视角）</h4>
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#http-tab">
+                <i class="bi bi-unlock text-danger"></i> HTTP 数据包
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#https-tab">
+                <i class="bi bi-lock text-success"></i> HTTPS 数据包
+            </button>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="http-tab">
+            <div class="packet-capture">
+<span class="comment">================================================================================</span>
+<span class="field">Frame 1:</span> 74 bytes on wire (592 bits)
+<span class="field">Ethernet II,</span> Src: 00:11:22:33:44:55, Dst: aa:bb:cc:dd:ee:ff
+<span class="field">Internet Protocol Version 4,</span> Src: 192.168.1.100, Dst: 93.184.216.34
+<span class="field">Transmission Control Protocol,</span> Src Port: 52431, Dst Port: <span class="highlight-danger">80</span>
+<span class="field">Hypertext Transfer Protocol</span>
+    <span class="field">POST</span> /login HTTP/1.1
+    Host: security-demo-lab.xyz
+    Content-Type: application/x-www-form-urlencoded
+    Content-Length: 38
+
+    <span class="highlight-danger">username=student&amp;password=MySecret123</span>
+    <span class="comment">^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</span>
+    <span class="comment">| 用户名和密码以明文形式传输！          |</span>
+    <span class="comment">| 任何在同一个 WiFi 网络上的人都能看到。  |</span>
+<span class="comment">================================================================================</span></div>
+        </div>
+        <div class="tab-pane fade" id="https-tab">
+            <div class="packet-capture">
+<span class="comment">================================================================================</span>
+<span class="field">Frame 1:</span> 126 bytes on wire (1008 bits)
+<span class="field">Ethernet II,</span> Src: 00:11:22:33:44:55, Dst: aa:bb:cc:dd:ee:ff
+<span class="field">Internet Protocol Version 4,</span> Src: 192.168.1.100, Dst: 93.184.216.34
+<span class="field">Transmission Control Protocol,</span> Src Port: 52432, Dst Port: <span class="field">443</span>
+<span class="field">Transport Layer Security</span>
+    TLSv1.3 Record Layer: Application Data
+    Content Type: Application Data (23)
+    Version: TLS 1.2 (0x0303)
+    Length: 69
+    <span class="field">Encrypted Application Data:</span> <span class="hex">b87f3a129cd4e1556e8f2b09</span>
+        <span class="hex">d3a741228cee19f0572b3d6cc4</span>
+        <span class="hex">189a5ef10bd6824a3c70e5a1b9</span>
+        <span class="hex">6d2f885c3177e9f40a53ff0d82</span>
+        <span class="hex">bc7e193ac16d48f5e72b140d9f</span>
+        <span class="hex">6a31c8572e</span>
+
+    <span class="comment">^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</span>
+    <span class="comment">| 数据完全加密，无法解读任何明文内容！   |</span>
+    <span class="comment">| 即使攻击者截获了数据包也是徒劳。       |</span>
+<span class="comment">================================================================================</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 4: TLS 握手过程 -->
+<section class="mb-5">
+    <h4>四、TLS 握手过程</h4>
+    <p class="text-muted">在传输任何数据之前，浏览器和服务器首先通过 TLS 握手建立安全连接：</p>
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card tls-step-card border-primary h-100">
+                <div class="card-body text-center">
+                    <h1 class="text-primary">1</h1>
+                    <h6>ClientHello</h6>
+                    <small class="text-muted">客户端发送支持的加密算法列表和随机数</small>
+                    <div class="arrow-down text-primary mt-2">&#8594; 服务器</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card tls-step-card border-primary h-100">
+                <div class="card-body text-center">
+                    <h1 class="text-primary">2</h1>
+                    <h6>ServerHello</h6>
+                    <small class="text-muted">服务器选择加密算法，发送随机数</small>
+                    <div class="arrow-down text-primary mt-2">&#8592; 客户端</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card tls-step-card border-primary h-100">
+                <div class="card-body text-center">
+                    <h1 class="text-primary">3</h1>
+                    <h6>Certificate</h6>
+                    <small class="text-muted">服务器发送 SSL/TLS 证书（含公钥）</small>
+                    <div class="arrow-down text-primary mt-2">&#8592; 客户端</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card tls-step-card border-success h-100">
+                <div class="card-body text-center">
+                    <h1 class="text-success">4</h1>
+                    <h6>Key Exchange</h6>
+                    <small class="text-muted">客户端验证证书，生成会话密钥</small>
+                    <div class="arrow-down text-success mt-2">&#8594; 服务器</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card tls-step-card border-success h-100">
+                <div class="card-body text-center">
+                    <h1 class="text-success">5</h1>
+                    <h6>ChangeCipherSpec</h6>
+                    <small class="text-muted">双方确认切换到加密通信模式</small>
+                    <div class="arrow-down text-success mt-2">&#8596; 双向</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card tls-step-card border-success h-100">
+                <div class="card-body text-center">
+                    <h1 class="text-success">6</h1>
+                    <h6>Encrypted Data</h6>
+                    <small class="text-muted">所有后续通信均使用会话密钥加密</small>
+                    <div class="arrow-down text-success mt-2">&#8596; 双向加密</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 5: 证书验证 -->
+<section class="mb-5">
+    <h4>五、为什么伪造证书会失败？— 证书验证机制</h4>
+    <p class="text-muted">TLS 不仅加密数据，还能验证服务器的真实身份。这是通过证书链（Certificate Chain）实现的。</p>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="text-center">证书信任链</h5>
+            <div class="text-center my-3">
+                <div class="d-inline-block border rounded p-3 bg-light mx-2">
+                    <strong>根 CA</strong><br><small class="text-muted">内置在操作系统/浏览器中</small>
+                </div>
+                <span class="fs-4">&#8594;</span>
+                <div class="d-inline-block border rounded p-3 bg-light mx-2">
+                    <strong>中间 CA</strong><br><small class="text-muted">由根 CA 签名授权</small>
+                </div>
+                <span class="fs-4">&#8594;</span>
+                <div class="d-inline-block border rounded p-3 bg-success text-white mx-2">
+                    <strong>网站证书</strong><br><small>由中间 CA 签名颁发</small>
+                </div>
+            </div>
+            <p class="text-center text-muted">浏览器验证链上的每一个签名，任何一环不合法都会触发警告。</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <i class="bi bi-check-circle"></i> 合法证书（由受信任 CA 颁发）
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li>证书由受浏览器信任的 CA 签名</li>
+                        <li>证书中的域名与访问的域名一致</li>
+                        <li>证书在有效期内</li>
+                        <li>浏览器显示 <span class="text-success"><i class="bi bi-lock"></i> 锁图标</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header bg-warning">
+                    <i class="bi bi-exclamation-triangle"></i> 自签名证书
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li>证书由服务器自己签名，未经 CA 验证</li>
+                        <li>浏览器弹出安全警告</li>
+                        <li>NET::ERR_CERT_AUTHORITY_INVALID</li>
+                        <li>必须手动点击"继续"才能访问</li>
+                    </ul>
+                    <div class="alert alert-warning mt-2 mb-0 p-2 small">
+                        <strong>你的连接不是私密连接</strong><br>
+                        攻击者可能会试图窃取你的信息
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header bg-danger text-white">
+                    <i class="bi bi-x-circle"></i> 伪造证书（中间人攻击）
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li>攻击者伪造了银行网站的证书</li>
+                        <li>但该证书不是由受信任的 CA 签发的</li>
+                        <li>浏览器同样会拒绝并显示警告</li>
+                        <li><strong>这就是 TLS 阻止中间人攻击的关键！</strong></li>
+                    </ul>
+                    <div class="alert alert-danger mt-2 mb-0 p-2 small">
+                        <strong>攻击失败！</strong><br>
+                        浏览器拒绝了伪造的证书，连接被中断
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 6: 总结 -->
+<section class="mb-5">
+    <h4>六、总结：TLS 如何防御中间人攻击</h4>
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card border-danger h-100">
+                <div class="card-header bg-danger text-white"><strong>窃听（Eavesdropping）</strong></div>
+                <div class="card-body">
+                    <p>中间人截获网络数据包，试图读取通信内容。</p>
+                    <p class="text-success mb-0"><strong>TLS 防御：</strong>所有数据经过强加密，攻击者只能看到无法解读的乱码。</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-danger h-100">
+                <div class="card-header bg-danger text-white"><strong>篡改（Tampering）</strong></div>
+                <div class="card-body">
+                    <p>中间人修改传输中的数据，注入恶意内容。</p>
+                    <p class="text-success mb-0"><strong>TLS 防御：</strong>TLS 包含消息认证码（MAC），任何篡改都会被检测到并导致连接中断。</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-danger h-100">
+                <div class="card-header bg-danger text-white"><strong>伪造证书（Forged Certificate）</strong></div>
+                <div class="card-body">
+                    <p>攻击者使用自签名或伪造证书冒充目标网站。</p>
+                    <p class="text-success mb-0"><strong>TLS 防御：</strong>浏览器严格验证证书链，伪造证书无法通过验证。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

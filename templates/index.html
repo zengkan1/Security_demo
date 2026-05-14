@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}首页{% endblock %}
+{% block content %}
+
+<div class="p-5 mb-4 bg-dark text-white rounded-3">
+    <div class="container-fluid py-4 text-center">
+        <h1 class="display-4 fw-bold">
+            <i class="bi bi-shield-check"></i> 信息安全课程演示平台
+        </h1>
+        <p class="fs-5 mt-3">
+            通过互动式演示，直观理解网络安全的核心概念：<br>
+            加密通信、中间人攻击、钓鱼攻击等常见安全威胁与防护措施。
+        </p>
+    </div>
+</div>
+
+<div class="row g-4 mt-2">
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-person-lock display-3 text-primary"></i>
+                <h3 class="card-title mt-3">用户认证系统</h3>
+                <p class="card-text text-muted">
+                    体验一个拥有安全密码哈希和 Session 管理的真实注册/登录系统。
+                    理解密码如何被安全地存储和验证。
+                </p>
+            </div>
+            <div class="card-footer bg-transparent text-center">
+                <a href="/register" class="btn btn-primary">注册账号</a>
+                <a href="/login" class="btn btn-outline-primary ms-2">登录</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-lock-fill display-3 text-success"></i>
+                <h3 class="card-title mt-3">TLS/HTTPS 防护</h3>
+                <p class="card-text text-muted">
+                    了解 TLS 协议如何保护你的数据不被窃听和篡改。
+                    对比 HTTP 明文传输与 HTTPS 加密传输的天壤之别，
+                    以及为什么伪造证书无法通过浏览器验证。
+                </p>
+            </div>
+            <div class="card-footer bg-transparent text-center">
+                <a href="/tls-demo" class="btn btn-success">开始学习</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-bug-fill display-3 text-danger"></i>
+                <h3 class="card-title mt-3">钓鱼攻击演示</h3>
+                <p class="card-text text-muted">
+                    亲身体验钓鱼攻击的全过程——从被诱导输入密码，
+                    到查看攻击者如何实时获取你的明文凭证，
+                    最后学习如何识别和防范钓鱼网站。
+                </p>
+            </div>
+            <div class="card-footer bg-transparent text-center">
+                <a href="/phishing" class="btn btn-danger">开始体验</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h4><i class="bi bi-info-circle"></i> 课程目标</h4>
+                <ul class="mb-0">
+                    <li><strong>理解威胁</strong>：认识中间人攻击、钓鱼攻击等常见网络威胁的工作原理。</li>
+                    <li><strong>掌握防护</strong>：学习 TLS/HTTPS 如何保护通信安全，以及为什么证书验证至关重要。</li>
+                    <li><strong>培养意识</strong>：通过亲身体验钓鱼攻击，建立识别和防范钓鱼网站的安全意识。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

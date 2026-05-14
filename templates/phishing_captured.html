@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}你被钓鱼了！{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card border-danger shadow phishing-reveal">
+            <div class="card-header bg-danger text-white text-center">
+                <h3 class="mb-0"><i class="bi bi-exclamation-triangle-fill"></i> 你已经被钓鱼了！</h3>
+            </div>
+            <div class="card-body text-center">
+                {% if username %}
+                    <div class="display-1 text-danger mb-3">
+                        <i class="bi bi-bug-fill"></i>
+                    </div>
+                    <h4 class="mb-3">
+                        <strong class="text-danger">{{ username }}</strong>，你的登录凭证已经被攻击者获取！
+                    </h4>
+                {% else %}
+                    <div class="display-1 text-danger mb-3">
+                        <i class="bi bi-bug-fill"></i>
+                    </div>
+                    <h4 class="mb-3">你的登录凭证已经被攻击者获取！</h4>
+                {% endif %}
+
+                <hr>
+
+                <div class="text-start">
+                    <h5 class="text-danger">在真实的钓鱼攻击中：</h5>
+                    <ul>
+                        <li>攻击者现在拥有你的<strong>用户名和密码（明文）</strong></li>
+                        <li>攻击者可以使用这些信息<strong>登录你的真实账户</strong></li>
+                        <li>攻击者可以修改你的密码，<strong>锁定你的账户</strong></li>
+                        <li>攻击者可以<strong>窃取你的个人数据和隐私信息</strong></li>
+                        <li>整个过程你<strong>完全不知情</strong></li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-success mt-3">
+                    <i class="bi bi-check-circle"></i>
+                    <strong>但请放心——这只是一个模拟演示！</strong><br>
+                    你的数据仅用于教学目的，不会被用于任何非法用途。
+                    请继续学习如何识别和防范此类攻击。
+                </div>
+
+                <div class="mt-4">
+                    <a href="/phishing/education" class="btn btn-success btn-lg me-2">
+                        <i class="bi bi-shield-check"></i> 学习如何防范
+                    </a>
+                    <a href="/phishing/captures" class="btn btn-outline-danger btn-lg">
+                        <i class="bi bi-eye"></i> 查看攻击者日志
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

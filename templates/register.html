@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}注册{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center">
+                <h4 class="mb-0"><i class="bi bi-person-plus"></i> 用户注册</h4>
+            </div>
+            <div class="card-body">
+                {% set action_url = '/register' %}
+                {% set submit_text = '注册' %}
+                {% set password_autocomplete = 'new-password' %}
+                {% set show_confirm = true %}
+                {% set footer_text = '已有账号？<a href="/login">立即登录</a>' %}
+                {% include "_login_form.html" %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

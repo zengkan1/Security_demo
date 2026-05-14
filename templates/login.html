@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}登录{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white text-center">
+                <h4 class="mb-0"><i class="bi bi-box-arrow-in-right"></i> 用户登录</h4>
+            </div>
+            <div class="card-body">
+                {% set action_url = '/login' %}
+                {% set submit_text = '登录' %}
+                {% set password_autocomplete = 'current-password' %}
+                {% set show_confirm = false %}
+                {% set footer_text = '还没有账号？<a href="/register">立即注册</a>' %}
+                {% include "_login_form.html" %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

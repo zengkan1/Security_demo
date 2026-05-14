@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}控制面板{% endblock %}
+{% block content %}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-success text-white mb-4">
+            <div class="card-body">
+                <h3><i class="bi bi-person-check"></i> 欢迎，{{ session.username }}！</h3>
+                <p class="mb-0">你已成功通过身份验证。以下是可以访问的演示模块：</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5><i class="bi bi-lock-fill text-success"></i> TLS/HTTPS 演示</h5>
+                <p class="text-muted">了解加密通信如何保护你的登录凭证在网络传输过程中不被窃取。</p>
+                <a href="/tls-demo" class="btn btn-outline-success">进入演示</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5><i class="bi bi-bug-fill text-danger"></i> 钓鱼攻击演示</h5>
+                <p class="text-muted">体验钓鱼攻击并学习如何识别和防范虚假登录页面。</p>
+                <a href="/phishing" class="btn btn-outline-danger">进入演示</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5><i class="bi bi-shield-check"></i> 安全提示</h5>
+                <ul class="mb-0">
+                    <li>使用<strong>强密码</strong>（包含大小写字母、数字和特殊字符，至少 8 位）。</li>
+                    <li><strong>不同网站使用不同密码</strong>，避免一个密码泄露导致所有账户受损。</li>
+                    <li>开启<strong>双因素认证（2FA）</strong>，即使密码泄露也能保护账户安全。</li>
+                    <li>在输入密码前<strong>检查浏览器地址栏</strong>，确认 URL 和锁图标。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}登录{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow border-danger">
+            <div class="card-header bg-danger text-white text-center">
+                <h4 class="mb-0"><i class="bi bi-box-arrow-in-right"></i> 用户登录</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-danger text-center py-1 small mb-3">
+                    [教育演示] 这是钓鱼攻击模拟页面 — 请勿输入真实密码
+                </div>
+                {% set action_url = '/phishing/attack' %}
+                {% set submit_text = '登录' %}
+                {% set password_autocomplete = 'current-password' %}
+                {% set show_confirm = false %}
+                {% set footer_text = '还没有账号？<a href="/register">立即注册</a>' %}
+                {% include "_login_form.html" %}
+            </div>
+            <div class="card-footer text-center text-muted small">
+                提示：注意观察浏览器地址栏中的 URL
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

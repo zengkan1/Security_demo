@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block title %}防范钓鱼指南{% endblock %}
+{% block content %}
+
+<h2 class="mb-4"><i class="bi bi-shield-fill-check text-success"></i> 如何识别和防范钓鱼攻击</h2>
+
+<!-- Section 1 -->
+<section class="mb-5">
+    <h4>一、什么是钓鱼攻击？</h4>
+    <div class="card bg-light">
+        <div class="card-body">
+            <p><strong>钓鱼攻击（Phishing）</strong>是指攻击者创建一个与真实网站外观几乎相同的假冒网站，通过电子邮件、短信、社交媒体等渠道发送链接，诱导用户输入敏感信息（用户名、密码、银行卡号等）的攻击方式。</p>
+            <ul class="mb-0">
+                <li>全球每年发生数亿次钓鱼攻击</li>
+                <li>钓鱼攻击是数据泄露的首要原因之一</li>
+                <li>任何人都有可能成为钓鱼攻击的目标</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Section 2 -->
+<section class="mb-5">
+    <h4>二、如何识别钓鱼网站？</h4>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <strong>方法 1：检查浏览器地址栏 URL</strong>
+                </div>
+                <div class="card-body">
+                    <p>在输入密码前，<strong>始终检查地址栏</strong>。</p>
+                    <div class="alert alert-success small mb-2">
+                        <strong>合法：</strong> <code>https://security-demo-lab.xyz/login</code>
+                    </div>
+                    <div class="alert alert-danger small mb-0">
+                        <strong>钓鱼：</strong> <code>https://security-demo-lab.xyz/phishing/attack</code>
+                    </div>
+                    <small class="text-muted">注意 URL 路径的不同。钓鱼网站还会使用相似的域名，如 <code>securty-demo-lab.xyz</code>（拼写错误）。</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <strong>方法 2：查看 SSL/TLS 证书</strong>
+                </div>
+                <div class="card-body">
+                    <p>点击浏览器地址栏中的<strong>锁图标</strong>，查看证书详情。</p>
+                    <ul class="mb-0">
+                        <li>确认证书是由<strong>受信任的 CA</strong> 颁发的</li>
+                        <li>确认证书中的<strong>域名</strong>与你访问的域名一致</li>
+                        <li>确认证书在<strong>有效期内</strong></li>
+                    </ul>
+                    <small class="text-muted">注意：钓鱼网站也可能有 HTTPS（如 Let's Encrypt 免费证书），所以 HTTPS 不等于网站可信！</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <strong>方法 3：不要点击可疑链接</strong>
+                </div>
+                <div class="card-body">
+                    <p>收到邮件或消息中的链接时：</p>
+                    <ul class="mb-0">
+                        <li><strong>悬停鼠标</strong>在链接上，查看实际跳转地址</li>
+                        <li>一个声称是 <code>https://your-bank.com</code> 的链接实际上可能指向 <code>https://evil-site.net</code></li>
+                        <li><strong>手动输入 URL</strong> 而不是点击链接</li>
+                        <li>使用浏览器书签访问常用网站</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <strong>方法 4：识别可疑的域名</strong>
+                </div>
+                <div class="card-body">
+                    <p>攻击者常使用域名欺骗技术：</p>
+                    <table class="table table-sm">
+                        <tr><th class="text-success">真实域名</th><th class="text-danger">假冒域名</th><th>手法</th></tr>
+                        <tr><td>google.com</td><td>go0gle.com</td><td>数字替换字母</td></tr>
+                        <tr><td>paypal.com</td><td>paypa1.com</td><td>字母替换</td></tr>
+                        <tr><td>amazon.com</td><td>amazon-secure.net</td><td>添加后缀混淆</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 3 -->
+<section class="mb-5">
+    <h4>三、回到本次演示</h4>
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <strong>回顾钓鱼攻击模拟页面</strong>
+        </div>
+        <div class="card-body">
+            <p>在刚才的演示中，钓鱼页面与真实登录页面<strong>几乎完全一样</strong>。唯一的区别是：</p>
+            <ul>
+                <li><strong>URL 路径</strong>：<code>/phishing/attack</code> 而非 <code>/login</code></li>
+                <li><strong>页面顶部</strong>：有一个红色的教育演示提示条</li>
+                <li><strong>页面底部</strong>：提示"注意观察浏览器地址栏中的 URL"</li>
+            </ul>
+            <div class="alert alert-warning mb-0">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <strong>关键教训：</strong>在真实的钓鱼攻击中，<strong>不会有任何教育提示条</strong>！
+                攻击者会精心制作一个与真实页面完全相同的假页面。
+                唯一可靠的判断方法是<strong>仔细检查浏览器地址栏中的 URL</strong>。
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 4 -->
+<section class="mb-5">
+    <h4>四、进阶保护措施</h4>
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-key-fill display-4 text-primary"></i>
+                    <h5 class="mt-2">使用密码管理器</h5>
+                    <small class="text-muted">密码管理器不会在假冒域名上自动填充密码，这是对钓鱼攻击的有效防护。</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-shield-lock-fill display-4 text-success"></i>
+                    <h5 class="mt-2">开启双因素认证（2FA）</h5>
+                    <small class="text-muted">即使密码被钓鱼获取，攻击者也无法登录你的账户，因为他们没有第二因素验证码。</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-arrow-repeat display-4 text-warning"></i>
+                    <h5 class="mt-2">使用不同密码</h5>
+                    <small class="text-muted">为不同网站设置不同密码，避免一个密码泄露导致所有账户受损。</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Golden Rule -->
+<section class="mb-5">
+    <div class="card bg-success text-white">
+        <div class="card-body text-center py-4">
+            <h3><i class="bi bi-star-fill"></i> 金科玉律</h3>
+            <p class="fs-5 mb-0">
+                <strong>永远手动输入网址，不要点击可疑邮件或消息中的链接。</strong><br>
+                在输入任何密码之前，先看一眼浏览器地址栏。
+            </p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

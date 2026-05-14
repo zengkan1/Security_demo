@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}攻击者日志{% endblock %}
+{% block content %}
+
+<h2 class="mb-3"><i class="bi bi-eye-fill text-warning"></i> 攻击者视角 — 捕获的凭证</h2>
+
+<div class="alert alert-danger">
+    <i class="bi bi-shield-exclamation"></i>
+    <strong>警告：</strong>以下是攻击者实时收集到的所有用户名和密码。
+    密码以<strong>明文</strong>显示——在真实攻击中，攻击者看到的就是这样的数据，而受害者完全不知情。
+</div>
+
+{% if captures %}
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>用户名</th>
+                <th>密码（明文）</th>
+                <th>IP 地址</th>
+                <th>浏览器信息</th>
+                <th>捕获时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in captures %}
+            <tr>
+                <td>{{ c.id }}</td>
+                <td><code>{{ c.username }}</code></td>
+                <td class="captured-password">{{ c.password }}</td>
+                <td><small>{{ c.ip_address or 'N/A' }}</small></td>
+                <td><small class="text-muted">{{ c.user_agent[:60] if c.user_agent else 'N/A' }}{% if c.user_agent and c.user_agent|length > 60 %}...{% endif %}</small></td>
+                <td><small>{{ c.captured_at }}</small></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<form method="POST" action="/phishing/captures/clear"
+      onsubmit="return confirm('确定要清空所有捕获数据吗？此操作不可撤销。');">
+    <button type="submit" class="btn btn-outline-danger">
+        <i class="bi bi-trash"></i> 清空所有数据
+    </button>
+</form>
+
+{% else %}
+<div class="text-center py-5">
+    <i class="bi bi-inbox display-1 text-muted"></i>
+    <h4 class="text-muted mt-3">暂无捕获数据</h4>
+    <p>请先访问钓鱼攻击模拟页面并输入测试凭证。</p>
+    <a href="/phishing/attack" class="btn btn-danger">前往钓鱼页面</a>
+</div>
+{% endif %}
+
+<div class="card bg-light mt-4">
+    <div class="card-body">
+        <h5><i class="bi bi-question-circle"></i> 这个页面向我们展示了什么？</h5>
+        <ul class="mb-0">
+            <li>攻击者可以<strong>实时</strong>看到受害者输入的凭证</li>
+            <li>密码以<strong>明文</strong>形式存储（因为受害者是以明文形式输入的）</li>
+            <li>攻击者还能获取受害者的<strong>IP 地址</strong>和<strong>浏览器信息</strong>，用于追踪和针对性攻击</li>
+            <li>在真实攻击中，攻击者还可以设置<strong>实时通知</strong>（如 Telegram Bot）来即时获知新凭证</li>
+        </ul>
+    </div>
+</div>
+
+{% endblock %}
