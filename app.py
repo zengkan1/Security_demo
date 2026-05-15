@@ -16,6 +16,10 @@ DATABASE = os.path.join(app.instance_path, 'security_demo.db')
 
 def get_db():
     if 'db' not in g:
+        try:
+            os.makedirs(app.instance_path)
+        except OSError:
+            pass
         g.db = sqlite3.connect(DATABASE)
         g.db.row_factory = sqlite3.Row
     return g.db
