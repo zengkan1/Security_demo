@@ -19,3 +19,6 @@ instance/
 Thumbs.db
 
 *.db
+cloudflared.exe
+nginx/
+certs/
