@@ -8,7 +8,23 @@ echo   MITM Attack Demo - Start
 echo ============================================
 
 REM --- 1. Find hotspot adapter, add virtual IP ---
-echo [1/7] Adding attacker IP 192.168.137.10...
+REM --- 0. Ensure real server is running ---
+echo [0/5] Starting real server (if not running)...
+tasklist 2>nul | findstr /i "app.py" >nul 2>&1
+if errorlevel 1 (
+    start "Flask-Real" python app.py
+    timeout /t 3 /nobreak >nul
+    cd nginx\nginx-1.26.3
+    nginx.exe -s quit >nul 2>&1
+    timeout /t 1 /nobreak >nul
+    start "nginx-REAL" nginx.exe -p . -c conf\nginx.conf
+    cd ..\..
+    echo   Real server started
+) else (
+    echo   Real server already running
+)
+
+echo [1/5] Adding attacker IP 192.168.137.10...
 
 set IFACE_NAME=
 for /L %%i in (1,1,20) do (
@@ -25,59 +41,49 @@ for /L %%i in (1,1,20) do (
 )
 
 if "!IFACE_NAME!"=="" (
-    echo [WARN] Hotspot adapter not found, skipping IP setup
+    echo [WARN] Hotspot adapter not found, skipping
 ) else (
     netsh interface ip add address "!IFACE_NAME!" 192.168.137.10 255.255.255.0 >nul 2>&1
-    if errorlevel 1 (echo   IP exists or add failed - OK) else (echo   Added 192.168.137.10 to !IFACE_NAME!)
+    if errorlevel 1 (echo   IP exists - OK) else (echo   Added 192.168.137.10 to !IFACE_NAME!)
 )
 
 REM --- 2. Free port 53 ---
-echo [2/7] Freeing port 53...
+echo [2/5] Freeing port 53...
 net stop SharedAccess >nul 2>&1
-echo   Done
 
-REM --- 3. Start Flask ---
-echo [3/7] Starting real Flask (127.0.0.1:5000)...
-start "Flask-Real" python app.py
-timeout /t 3 /nobreak >nul
-
-echo [4/7] Starting attacker Flask (127.0.0.1:5001)...
+REM --- 3. Start attacker Flask ---
+echo [3/5] Starting attacker Flask (127.0.0.1:5001)...
 start "Flask-Attacker" python attacker.py
 timeout /t 2 /nobreak >nul
 
-REM --- 4. Start nginx ---
-echo [5/7] Starting real nginx (127.0.0.1:443)...
+REM --- 4. Start attacker nginx ---
+echo [4/5] Starting attacker nginx (192.168.137.10:443)...
 cd nginx\nginx-1.26.3
-nginx.exe -s quit >nul 2>&1
-timeout /t 1 /nobreak >nul
-start "nginx-REAL" nginx.exe -p . -c conf\nginx.conf
-
-echo [6/7] Starting attacker nginx (192.168.137.10:443)...
 start "nginx-ATTACKER" nginx.exe -p . -c conf\nginx_attacker.conf
 cd ..\..
 
 REM --- 5. Start rogue DNS ---
-echo [7/7] Starting rogue DNS (port 53, hijack security-demo-lab.xyz)...
+echo [5/5] Starting rogue DNS (port 53, hijack security-demo-lab.xyz)...
 start "RogueDNS" python rogue_dns.py
 timeout /t 1 /nobreak >nul
 
 REM --- 6. Restore hotspot ---
-echo Restoring hotspot...
 net start SharedAccess >nul 2>&1
 
 echo.
 echo ============================================
-echo   All services started!
+echo   Attack environment ready!
 echo.
 echo   Phone: connect to hotspot
 echo          visit https://security-demo-lab.xyz
-echo          TLS cert warning = DNS hijack BLOCKED!
+echo          = TLS cert warning!
 echo.
-echo   Attacker log: http://127.0.0.1:5001/attacker-log
+echo   Traffic monitor:
+echo     Get-Content attacker_traffic.log -Wait
 echo.
-echo   Cloudflare Tunnel (optional):
-echo     cloudflared.exe tunnel run --url https://localhost:443 --no-tls-verify security-demo
+echo   Captured credentials:
+echo     http://127.0.0.1:5001/attacker-log
 echo.
-echo   Stop: run stop_all.bat
+echo   Stop: stop_attack.bat
 echo ============================================
 pause

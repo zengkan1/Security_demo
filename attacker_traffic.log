@@ -1,0 +1,4 @@
+[19:19:51] GET /  <- 192.168.137.6  UA=
+[19:19:51] TAMPERED: GET / response (6617 bytes)
+[19:19:58] GET /register  <- 192.168.137.6  UA=
+[19:19:58] TAMPERED: GET /register response (4565 bytes)
