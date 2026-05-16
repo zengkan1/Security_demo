@@ -22,3 +22,5 @@ Thumbs.db
 cloudflared.exe
 nginx/
 certs/
+attacker_certs/
+attacker_db.sqlite
