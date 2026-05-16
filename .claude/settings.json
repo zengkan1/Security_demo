@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(nginx.exe -s quit -p .)",
+      "Bash(taskkill /f /im nginx.exe)",
+      "Bash(taskkill //f //im nginx.exe)",
+      "Bash(python -c ' *)",
+      "Bash(netsh interface *)",
+      "Bash(powershell -Command \"Get-NetConnectionProfile | Select-Object Name,IPv4Connectivity\")",
+      "Bash(reg query *)",
+      "Bash(route print *)",
+      "Bash(powershell -Command \"Get-NetNat 2>&1\")",
+      "Bash(netsh advfirewall *)",
+      "Bash(netsh routing *)",
+      "Bash(ping -n 1 -S 192.168.137.1 baidu.com)",
+      "Bash(python /d/MyProject/Security_demo/rogue_dns.py)",
+      "Bash(netstat -ano)"
+    ]
+  }
+}

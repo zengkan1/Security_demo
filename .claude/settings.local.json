@@ -4,7 +4,12 @@
       "Bash(openssl req *)",
       "Bash(/d/MyProject/Security_demo/nginx/nginx-1.26.3/nginx.exe -s quit -p /d/MyProject/Security_demo/nginx/nginx-1.26.3)",
       "Bash(/d/MyProject/Security_demo/nginx/nginx-1.26.3/nginx.exe -t -c /d/MyProject/Security_demo/nginx/nginx-1.26.3/conf/nginx.conf -p /d/MyProject/Security_demo/nginx/nginx-1.26.3)",
-      "Bash(/d/MyProject/Security_demo/nginx/nginx-1.26.3/nginx.exe -t -c /d/MyProject/Security_demo/nginx/nginx-1.26.3/conf/nginx_attacker.conf -p /d/MyProject/Security_demo/nginx/nginx-1.26.3)"
+      "Bash(/d/MyProject/Security_demo/nginx/nginx-1.26.3/nginx.exe -t -c /d/MyProject/Security_demo/nginx/nginx-1.26.3/conf/nginx_attacker.conf -p /d/MyProject/Security_demo/nginx/nginx-1.26.3)",
+      "Bash(pkill -f \"nginx\")",
+      "Bash(pkill -f \"attacker.py\")",
+      "Bash(pkill -f \"app.py\")",
+      "Bash(pkill -f \"rogue_dns.py\")",
+      "Bash(tasklist)"
     ]
   }
 }

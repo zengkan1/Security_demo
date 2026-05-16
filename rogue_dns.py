@@ -17,8 +17,8 @@ HIJACK_DOMAIN = 'security-demo-lab.xyz'
 ATTACKER_IP = '192.168.137.10'
 
 # 上游 DNS（用于正常域名查询）
-UPSTREAM_DNS = ('8.8.8.8', 53)       # Google DNS
-UPSTREAM2_DNS = ('1.1.1.1', 53)     # Cloudflare DNS（备用）
+UPSTREAM_DNS = ('202.115.39.9', 53)      # 校园网主 DNS
+UPSTREAM2_DNS = ('202.115.39.6', 53)    # 校园网备 DNS
 
 
 def build_dns_response(query_data, answer_ip):
@@ -125,8 +125,8 @@ def main():
     server_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-    # 优先绑热点 IP，不行再试全局
-    for bind_host in ['192.168.137.1', '0.0.0.0']:
+    # 只绑攻击者 IP，不跟 SharedAccess (0.0.0.0:53) 冲突
+    for bind_host in ['192.168.137.10']:
         try:
             server_sock.bind((bind_host, PORT))
             print(f'[成功] 绑定到 {bind_host}:{PORT}')
